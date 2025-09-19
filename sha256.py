@@ -118,13 +118,10 @@ def sha256_expand_words(words16):
 
 def sha256_compress(block, H):
     """Compression SHA-256 d'un bloc de 512 bits sur l'état H."""
-    # Convertir bloc en mots et les étendre
     W = sha256_expand_words(sha256_block_to_words(block))
 
-    # Initialiser les registres avec les valeurs H
     a, b, c, d, e, f, g, h = H
 
-    # Les fonctions Σ, Ch, Maj
     def big_sigma0(x):
         return right_rotate(x, 2) ^ right_rotate(x, 13) ^ right_rotate(x, 22)
 
@@ -137,7 +134,6 @@ def sha256_compress(block, H):
     def Maj(x, y, z):
         return (x & y) ^ (x & z) ^ (y & z)
 
-    # 64 rounds
     for t in range(64):
         T1 = (h + big_sigma1(e) + Ch(e, f, g) + K[t] + W[t]) & 0xFFFFFFFF
         T2 = (big_sigma0(a) + Maj(a, b, c)) & 0xFFFFFFFF
@@ -151,7 +147,6 @@ def sha256_compress(block, H):
         b = a
         a = (T1 + T2) & 0xFFFFFFFF
 
-    # Mise à jour de H
     new_H = [
         (H[0] + a) & 0xFFFFFFFF,
         (H[1] + b) & 0xFFFFFFFF,
@@ -170,20 +165,15 @@ def sha256(message_bytes):
     Compute SHA-256 digest for message_bytes (bytes) using the functions implemented above.
     Returns the digest as a hex string (lowercase).
     """
-    # 1) Pad
     padded = sha256_pad(message_bytes)
 
-    # 2) Split into 512-bit blocks
     blocks = sha256_split_blocks(padded)
 
-    # 3) Initialize H (copy to avoid mutating global H)
-    H_state = H[:]  # H defined earlier in your file
+    H_state = H[:] 
 
-    # 4) Process each block
     for block in blocks:
         H_state = sha256_compress(block, H_state)
 
-    # 5) Produce final digest: concatenate H_state words as big-endian 32-bit words
     digest_bytes = b''.join(h.to_bytes(4, byteorder='big') for h in H_state)
     return digest_bytes.hex()
 

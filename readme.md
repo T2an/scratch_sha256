@@ -1,5 +1,11 @@
 # SHA256 staging
 
+    This documentation explains the SHA-256 (Secure Hash Algorithm 256-bit) implementation process step by step.
+
+SHA-256 is a cryptographic hash function that takes an input message of any length and produces a fixed 256-bit (32-byte) hash value. It's part of the SHA-2 family of hash functions and is widely used for digital signatures, message authentication, and other security applications.
+
+As shown in the main.py file, this implementation can be used to generate hash values identical to Python's built-in hashlib.sha256() function. It is made for educational purpose.
+
 ## Stage 1: Padding
 
 SHA-256 works on blocks of 512 bits (64 bytes). To process messages of unknown length,
@@ -25,6 +31,7 @@ Before hash compuration begin, we need to set the initial Hash values (H0).
 
 For SHA-256, the initial Hash values (H0) are the first 32 bits of the fractional parts of the square root of the first 8 primes (2, 3, 5, 7, 11, 13, 17, 19).
 
+```python
 H0 = [
     0x6a09e667,
     0xbb67ae85,
@@ -35,10 +42,12 @@ H0 = [
     0x1f83d9ab,
     0x5be0cd19,
 ]
+``` 
 
 The other constant to define are the round constants (K).
 K is defined as the first 32 bits of the fractional parts of the cube root of the first 64 primes (2,...,311).
 
+``` python
 K = [
     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
     0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -57,6 +66,7 @@ K = [
     0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
     0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
 ]
+```
 
 ## Stage 6: Computation
 
@@ -69,14 +79,19 @@ Then the message schedule is the step that expand the words of the block into 64
 because the SHA-256 iteration is done 64 times for each block, so we need 64 words.
 
 The first 16 words are the words from step 3. Then each words is calculated using the following formula:
+
+``` python
 W[t] = σ1(W[t-2]) + W[t-7] + σ0(W[t-15]) + W[t-16]  (mod 2^32)
-
+```
 σ0 is the following function:
+
+``` python
 σ0(x) = ROTR7(x) XOR ROTR18(x) XOR SHR3(x)
-
+```
 σ1 is the following function:
+``` python
 σ1(x) = ROTR17(x) XOR ROTR19(x) XOR SHR10(x)
-
+```
 ROTR is the right rotation function, wich mean every bit of the word is shifted to the right by the number 
 of bits specified. The bits that are shifted out are added to the left of the word.
 
@@ -85,8 +100,9 @@ shifted out are discarded. The first bit of the word are set to 0.
 
 ### Initialization of the registers
 
-The registers are initialized with the initial Hash values (H0). They are noted as
-a, b, c, d, e, f, g, h.
+The registers are initialized with the initial Hash values (H0). They are noted as a, b, c, d, e, f, g, h.
+
+``` python
 
 a = H0[0]
 b = H0[1]
@@ -96,10 +112,13 @@ e = H0[4]
 f = H0[5]
 g = H0[6]
 h = H0[7]
+```
 
 ### Register update
 
 In this loop, the registers are updated 64 times with the following formula:
+
+``` python
 
 for t in range(64):
     T1 = (h + big_sigma1(e) + Ch(e, f, g) + K[t] + W[t]) & 0xFFFFFFFF
@@ -113,34 +132,47 @@ for t in range(64):
     c = b
     b = a
     a = (T1 + T2) & 0xFFFFFFFF
+```
 
-The function big_sigma0 big_sigma1 are just right rotation functions like we did before
+The function big_sigma0 and big_sigma1 are just right rotation functions like we did before
 
+``` python
 def big_sigma0(x):
     return right_rotate(x, 2) ^ right_rotate(x, 13) ^ right_rotate(x, 22)
+```
 
+``` python
 def big_sigma1(x):
     return right_rotate(x, 6) ^ right_rotate(x, 11) ^ right_rotate(x, 25)
+```
 
 The Ch function stand for choose, it is a function that choose the value of x or z depending on the value of y.
 
+``` python
+
 def Ch(x, y, z):
     return (x & y) ^ (~x & z)
+```
 
 The maj function stand for majority, it is a function that choose the bit witch is the most represented at 
 at the same position in x, y and z.
 
+``` python
+
 def Maj(x, y, z):
     return (x & y) ^ (x & z) ^ (y & z)
+```
 
-i had to mention that i found this video very helpful to understand how sha256 works and particularly the register update, 
-you shoud definitely watch it if you still have questions about the sha256 algorithm.
+I had to mention that i found this video, which is very helpful to understand how sha256 works and particularly the register update. You shoud definitely watch it if you still have questions about the sha256 algorithm.
 
-https://www.youtube.com/watch?v=orIgy2MjqrA
+[SHA-256 video by RedBlockBlue](https://www.youtube.com/watch?v=orIgy2MjqrA)
 
 # Stage 7: Update the Hash values
 
 The Hash values are updated by adding the value of the registers to the initial Hash values.
+
+``` python
+
 H0[i] = H0[i] + a
 H0[i+1] = H0[i+1] + b
 H0[i+2] = H0[i+2] + c
@@ -149,6 +181,7 @@ H0[i+4] = H0[i+4] + e
 H0[i+5] = H0[i+5] + f
 H0[i+6] = H0[i+6] + g
 H0[i+7] = H0[i+7] + h
+```
 
 ## Stage 8: Produce the final digest
 
