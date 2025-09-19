@@ -187,14 +187,3 @@ def sha256(message_bytes):
     digest_bytes = b''.join(h.to_bytes(4, byteorder='big') for h in H_state)
     return digest_bytes.hex()
 
-
-if __name__ == "__main__":
-    import hashlib
-
-    message = b"keysecret"
-    my_hash = sha256(message)
-    lib_hash = hashlib.sha256(message).hexdigest()
-
-    print("My sha256   :", my_hash)
-    print("hashlib     :", lib_hash)
-    print("Equal?      :", my_hash == lib_hash)
