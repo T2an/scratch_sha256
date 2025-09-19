@@ -1,7 +1,5 @@
 # SHA256 staging
 
-This documentation explains the SHA-256 (Secure Hash Algorithm 256-bit) implementation process step by step.
-
 SHA-256 is a cryptographic hash function that takes an input message of any length and produces a fixed 256-bit (32-byte) hash value. It's part of the SHA-2 family of hash functions and is widely used for digital signatures, message authentication, and other security applications.
 
 As shown in the main.py file, this implementation can be used to generate hash values identical to Python's built-in hashlib.sha256() function. It is made for educational purpose.
@@ -10,8 +8,7 @@ As shown in the main.py file, this implementation can be used to generate hash v
 
 ## Stage 1: Padding
 
-SHA-256 works on blocks of 512 bits (64 bytes). To process messages of unknown length,
-we must add a padding to them so that their total length is a multiple of 512 bits.
+SHA-256 works on blocks of 512 bits (64 bytes). To process messages of unknown length, we must add a padding to them so that their total length is a multiple of 512 bits.
 The padding steps are the following:
 1. Append a '1' bit (0x80).
 2. Append '0' bits (0x00) until the message length in bits is congruent to 448 mod 512.
@@ -29,7 +26,8 @@ A block is 512 bits, we need to split it into 16 words.
 
 
 ## Stage 4: Setting the initial Hash values and round constants
-Before hash compuration begin, we need to set the initial Hash values (H0).
+
+Before hash computation begin, we need to set the initial Hash values (H0).
 
 For SHA-256, the initial Hash values (H0) are the first 32 bits of the fractional parts of the square root of the first 8 primes (2, 3, 5, 7, 11, 13, 17, 19).
 
@@ -74,11 +72,11 @@ K = [
 
 ### For loop
 
-The computation start by a for loop that itarate on the number of blocks. 
+The computation starts with a for loop that iterates on the number of blocks. 
 
 ### Message schedule
-Then the message schedule is the step that expand the words of the block into 64 words. Why
-because the SHA-256 iteration is done 64 times for each block, so we need 64 words.
+Then the message schedule is the step that expands the words of the block into 64 words. Why?
+Because the SHA-256 iteration is done 64 times for each block, so we need 64 words.
 
 The first 16 words are the words from step 3. Then each words is calculated using the following formula:
 
@@ -94,7 +92,7 @@ W[t] = σ1(W[t-2]) + W[t-7] + σ0(W[t-15]) + W[t-16]  (mod 2^32)
 ``` python
 σ1(x) = ROTR17(x) XOR ROTR19(x) XOR SHR10(x)
 ```
-ROTR is the right rotation function, wich mean every bit of the word is shifted to the right by the number 
+ROTR is the right rotation function, which means every bit of the word is shifted to the right by the number 
 of bits specified. The bits that are shifted out are added to the left of the word.
 
 The SHR function also shift the bits to the right by the number of bits specified. But the bits that are 
@@ -156,8 +154,8 @@ def Ch(x, y, z):
     return (x & y) ^ (~x & z)
 ```
 
-The maj function stand for majority, it is a function that choose the bit witch is the most represented at 
-at the same position in x, y and z.
+The maj function stands for majority, it is a function that chooses the bit which is the most represented at 
+the same position in x, y and z.
 
 ``` python
 
@@ -165,7 +163,7 @@ def Maj(x, y, z):
     return (x & y) ^ (x & z) ^ (y & z)
 ```
 
-I had to mention that i found this video, which is very helpful to understand how sha256 works and particularly the register update. You shoud definitely watch it if you still have questions about the sha256 algorithm.
+I had to mention that I found this video, which is very helpful to understand how sha256 works and particularly the register update. You should definitely watch it if you still have questions about the sha256 algorithm.
 
 [SHA-256 video by RedBlockBlue](https://www.youtube.com/watch?v=orIgy2MjqrA)
 
@@ -193,7 +191,7 @@ Finally, the digest is produced by concatenating the Hash values as big-endian 3
 
 # length extension attack staging
 
-Intersting resources about length extension attack:
+Interesting resources about length extension attack:
 
 https://www.cryptologie.net/posts/how-did-length-extension-attacks-made-it-into-sha-2/
 
