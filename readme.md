@@ -1,6 +1,6 @@
 # SHA256 staging
 
-    This documentation explains the SHA-256 (Secure Hash Algorithm 256-bit) implementation process step by step.
+This documentation explains the SHA-256 (Secure Hash Algorithm 256-bit) implementation process step by step.
 
 SHA-256 is a cryptographic hash function that takes an input message of any length and produces a fixed 256-bit (32-byte) hash value. It's part of the SHA-2 family of hash functions and is widely used for digital signatures, message authentication, and other security applications.
 
