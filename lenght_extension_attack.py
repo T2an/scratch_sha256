@@ -30,6 +30,16 @@ def sha256_padding_for_total_length(total_len_bytes):
 def perform_length_extension(original_message: bytes, original_mac_hex: str, extension: bytes, key_len: int):
     """
     Perform a SHA-256 length-extension attack for a naive MAC of the form SHA256(key || message).
+    The required information are :
+
+    - the original message
+    - the original MAC
+    - the extension
+    - key length
+ 
+    it use the fact that SHA-256 is a Merkle-Damgard construction, so we can use the original MAC
+    as the initial state of the hash and continue the hash by adding the extension.
+
     """
     total_before = key_len + len(original_message) 
     glue = sha256_padding_for_total_length(total_before)

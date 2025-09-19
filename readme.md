@@ -6,6 +6,8 @@ SHA-256 is a cryptographic hash function that takes an input message of any leng
 
 As shown in the main.py file, this implementation can be used to generate hash values identical to Python's built-in hashlib.sha256() function. It is made for educational purpose.
 
+[RFC](https://datatracker.ietf.org/doc/html/rfc6234)
+
 ## Stage 1: Padding
 
 SHA-256 works on blocks of 512 bits (64 bytes). To process messages of unknown length,
@@ -190,3 +192,13 @@ Finally, the digest is produced by concatenating the Hash values as big-endian 3
 
 
 
+# length extension attack staging
+
+Intersting resources about length extension attack:
+
+https://www.cryptologie.net/posts/how-did-length-extension-attacks-made-it-into-sha-2/
+
+https://www.youtube.com/watch?v=orIgy2MjqrA
+
+
+#TODO
