@@ -19,7 +19,10 @@ if __name__ == "__main__":
     ok = (server_check_mac == forged_mac)
 
     if ok:
-        print("\n*** SUCCESS! ***")
-        print("Forged message :", forged_msg)
-        print("Forged mac:", forged_mac)
-        print("Server check mac:", server_check_mac)
+        print("SUCCESS!")
+    else:
+        print("FAILED!")
+
+    print("Forged message :", forged_msg)
+    print("Forged mac:", forged_mac)
+    print("Server check mac:", server_check_mac)

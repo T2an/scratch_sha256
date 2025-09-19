@@ -191,7 +191,6 @@ Finally, the digest is produced by concatenating the Hash values as big-endian 3
 32 bits words are concatenated to form a 256 bits digest. It is returned as a hex string.
 
 
-
 # length extension attack staging
 
 Intersting resources about length extension attack:
